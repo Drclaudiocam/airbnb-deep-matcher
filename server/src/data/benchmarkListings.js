@@ -4,7 +4,109 @@
  */
 
 export const BENCHMARK_LISTINGS = [
-  // 1. PRAIA & LITORAL - UBATUBA (SP)
+  // 1. CAMPO & SERRA - SERRA NEGRA (SP) - NOVO
+  {
+    id: "airbnb_serra_negra_chale_montanha",
+    url: "https://www.airbnb.com.br/rooms/11928374",
+    title: "Chalé Mirante da Serra Negra - Piscina Aquecida & Lareira",
+    location: "Refúgio da Serra, Serra Negra - SP",
+    state: "SP",
+    city: "Serra Negra",
+    environment: "mountain",
+    type: "Chalé de montanha inteiro",
+    superhost: true,
+    rating: 4.97,
+    reviewCount: 56,
+    pricePerNight: 780,
+    cleaningFee: 160,
+    capacity: { guests: 6, bedrooms: 2, beds: 4, baths: 2 },
+    images: [
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"
+    ],
+    officialAmenities: [
+      "Piscina privativa",
+      "Piscina aquecida",
+      "Lareira",
+      "Wi-Fi",
+      "Cozinha completa",
+      "Churrasqueira",
+      "Permite animais de estimação"
+    ],
+    hostDescription: `
+      Desfrute da tranquilidade e do ar puro de Serra Negra no Circuito das Águas Paulista!
+      - Piscina privativa com aquecimento por bomba de calor elétrica (mantém a água a 30°C o ano todo).
+      - Lareira aconchegante na sala de estar (disponibilizamos cesto de lenha como cortesia).
+      - Cozinha equipada com Fritadeira Airfryer Mondial 5L, Cafeteira Nespresso, micro-ondas, taças de vinho e churrasqueira na varanda.
+      - 2 dormitórios com ar-condicionado quente e frio e cortinas blackout.
+      - Wi-Fi Fibra Óptica de 300 Mbps e quintal cercado ideal para pets.
+    `,
+    guestReviews: [
+      {
+        id: "rev_sn_101",
+        author: "Rodrigo Alcantara",
+        date: "Fevereiro de 2026",
+        rating: 5,
+        text: "Passamos um fim de semana maravilhoso em Serra Negra! A piscina aquecida foi perfeita para as crianças mesmo à noite quando a temperatura caiu na serra. Usamos a airfryer para os petiscos e a lareira à noite."
+      },
+      {
+        id: "rev_sn_102",
+        author: "Vanessa Toledo",
+        date: "Janeiro de 2026",
+        rating: 5,
+        text: "Casa impecável com vista linda para as montanhas de Serra Negra. Internet rápida de 300 megas estável e nosso cachorro adorou o quintal todo cercado."
+      }
+    ]
+  },
+
+  // 2. CAMPO & SERRA - SERRA NEGRA (SP) - SÍTIO GOURMET
+  {
+    id: "airbnb_serra_negra_sitio_gourmet",
+    url: "https://www.airbnb.com.br/rooms/12839401",
+    title: "Sítio Vale Verde Serra Negra - Piscina Aquecida, Hidro & Espaço Gourmet",
+    location: "Bairro das Posses, Serra Negra - SP",
+    state: "SP",
+    city: "Serra Negra",
+    environment: "mountain",
+    type: "Sítio inteiro",
+    superhost: true,
+    rating: 4.93,
+    reviewCount: 42,
+    pricePerNight: 920,
+    cleaningFee: 200,
+    capacity: { guests: 10, bedrooms: 4, beds: 7, baths: 4 },
+    images: [
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=1200&q=80"
+    ],
+    officialAmenities: [
+      "Piscina privativa",
+      "Piscina aquecida",
+      "Banheira de hidromassagem",
+      "Churrasqueira",
+      "Cozinha completa",
+      "Wi-Fi"
+    ],
+    hostDescription: `
+      Sítio cinematográfico em Serra Negra cercado pela natureza.
+      - Área de lazer completa com piscina aquecida privativa e hidromassagem aquecida a gás.
+      - Espaço gourmet com churrasqueira, forno a lenha para pizza, cervejeira e bancada.
+      - Cozinha completa com Airfryer digital, lava-louças, liquidificador e cafeteira.
+      - 4 suítes climatizadas e sala ampla com lareira.
+    `,
+    guestReviews: [
+      {
+        id: "rev_sn_201",
+        author: "Felipe Nogueira",
+        date: "Janeiro de 2026",
+        rating: 5,
+        text: "Melhor sítio em Serra Negra! A piscina com hidro aquecida estava sensacional, fizemos pizza no forno a lenha e o espaço gourmet tem tudo."
+      }
+    ]
+  },
+
+  // 3. PRAIA & LITORAL - UBATUBA (SP)
   {
     id: "airbnb_ubatuba_villa_sol",
     url: "https://www.airbnb.com.br/rooms/10849201",
@@ -60,7 +162,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 2. CAMPO & SERRA - GRAMADO (RS)
+  // 4. CAMPO & SERRA - GRAMADO (RS)
   {
     id: "airbnb_gramado_chalet_luxo",
     url: "https://www.airbnb.com.br/rooms/20938492",
@@ -114,7 +216,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 3. CAMPO & SERRA - CAMPOS DO JORDÃO (SP)
+  // 5. CAMPO & SERRA - CAMPOS DO JORDÃO (SP)
   {
     id: "airbnb_campos_reserva_alto",
     url: "https://www.airbnb.com.br/rooms/30192847",
@@ -159,7 +261,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 4. PRAIA & LITORAL - FLORIANÓPOLIS (SC)
+  // 6. PRAIA & LITORAL - FLORIANÓPOLIS (SC)
   {
     id: "airbnb_floripa_beach_loft",
     url: "https://www.airbnb.com.br/rooms/40582910",
@@ -203,7 +305,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 5. PRAIA & LITORAL - ILHABELA (SP)
+  // 7. PRAIA & LITORAL - ILHABELA (SP)
   {
     id: "airbnb_ilhabela_refugio_mar",
     url: "https://www.airbnb.com.br/rooms/50918234",
@@ -247,7 +349,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 6. PRAIA & LITORAL - BÚZIOS (RJ)
+  // 8. PRAIA & LITORAL - BÚZIOS (RJ)
   {
     id: "airbnb_buzios_villa_geriba",
     url: "https://www.airbnb.com.br/rooms/60192834",
@@ -293,7 +395,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 7. CAMPO & SERRA - MONTE VERDE (MG)
+  // 9. CAMPO & SERRA - MONTE VERDE (MG)
   {
     id: "airbnb_monte_verde_cabana_pinheiros",
     url: "https://www.airbnb.com.br/rooms/70482910",
@@ -338,7 +440,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 8. URBANO - SÃO PAULO (SP)
+  // 10. URBANO - SÃO PAULO (SP)
   {
     id: "airbnb_sp_design_pinheiros",
     url: "https://www.airbnb.com.br/rooms/80938472",
@@ -383,7 +485,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 9. URBANO & PRAIA - RIO DE JANEIRO (RJ)
+  // 11. URBANO & PRAIA - RIO DE JANEIRO (RJ)
   {
     id: "airbnb_rj_ipanema_ocean",
     url: "https://www.airbnb.com.br/rooms/90384721",

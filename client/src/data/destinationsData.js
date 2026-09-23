@@ -1,9 +1,71 @@
 /**
  * Regional Destination Insights & Autocomplete Database
- * Provides curated recommendations, climate tips and must-check amenities per destination.
+ * Expanded catalog with Serra Negra, Águas de Lindóia, Brotas, Paraty, Petrópolis, and major destinations.
  */
 
 export const DESTINATIONS_CATALOG = [
+  // 1. SERRA NEGRA - SP
+  {
+    city: "Serra Negra",
+    state: "SP",
+    label: "Serra Negra, Circuito das Águas - SP",
+    environment: "mountain",
+    environmentLabel: "Campo & Serra",
+    icon: "🌲",
+    neighborhoods: ["Centro", "Alto das Palmeiras", "Bairro das Posses", "Refúgio da Serra", "Planalto"],
+    tagline: "Circuito das Águas Paulista, Clima de Montanha & Compras de Malhas",
+    climateTip: "Clima ameno durante o dia e noites frescas. Piscinas aquecidas por bomba de calor e chalés com lareira garantem conforto o ano inteiro.",
+    recommendedProfile: "piscina_lazer",
+    topAmenitiesToInspect: [
+      { label: "Piscina Aquecida (Bomba de Calor)", reason: "Permite aproveitar mesmo com o vento fresco da serra" },
+      { label: "Fritadeira Elétrica (Airfryer)", reason: "Praticidade para refeições e petiscos em família" },
+      { label: "Espaço Gourmet & Churrasqueira", reason: "Excelente para confraternizações e almoços ao ar livre" },
+      { label: "Lareira Interna ou Aquecedor", reason: "Garante aconchego nas noites frias de inverno" }
+    ],
+    popularKeywords: ["Piscina aquecida", "Airfryer", "Lareira", "Circuito das Águas", "Vista panorâmica"]
+  },
+
+  // 2. ÁGUAS DE LINDÓIA - SP
+  {
+    city: "Águas de Lindóia",
+    state: "SP",
+    label: "Águas de Lindóia, Circuito das Águas - SP",
+    environment: "mountain",
+    environmentLabel: "Campo & Serra",
+    icon: "🌲",
+    neighborhoods: ["Centro", "Morro do Cruzeiro", "Bela Vista", "Jardim Alpino"],
+    tagline: "Capital Termal do Brasil & Relaxamento",
+    climateTip: "Destino famoso por águas termais e tranquilidade. Hidromassagens e piscinas climatizadas são o ponto alto.",
+    recommendedProfile: "piscina_lazer",
+    topAmenitiesToInspect: [
+      { label: "Banheira de Hidromassagem Aquecida", reason: "Relaxamento garantido com água quente" },
+      { label: "Cozinha Equipada com Airfryer", reason: "Praticidade diária" },
+      { label: "Wi-Fi Rápido e Estável", reason: "Conectividade para quem fica longas estadias" }
+    ],
+    popularKeywords: ["Hidromassagem", "Piscina aquecida", "Serra", "Airfryer"]
+  },
+
+  // 3. BROTAS - SP
+  {
+    city: "Brotas",
+    state: "SP",
+    label: "Brotas, Capital da Aventura - SP",
+    environment: "countryside",
+    environmentLabel: "Interior & Ecoturismo",
+    icon: "🌾",
+    neighborhoods: ["Centro", "Patrimônio", "Represa do Jacaré Pepira"],
+    tagline: "Capital da Aventura, Cachoeiras & Ecoturismo",
+    climateTip: "Depois de um dia de rafting e cachoeiras, uma piscina privativa aquecida e churrasqueira completam a estadia perfeita.",
+    recommendedProfile: "piscina_lazer",
+    topAmenitiesToInspect: [
+      { label: "Piscina Privativa com Aquecimento", reason: "Relaxamento muscular pós-trilhas e cachoeiras" },
+      { label: "Churrasqueira Completa & Espetos", reason: "Churrasco com os amigos após as atividades" },
+      { label: "Aceita Pets com Quintal Fechado", reason: "Muitos turistas levam seus cachorros para Brotas" }
+    ],
+    popularKeywords: ["Piscina aquecida", "Churrasqueira", "Pets", "Ecoturismo"]
+  },
+
+  // 4. UBATUBA - SP
   {
     city: "Ubatuba",
     state: "SP",
@@ -24,6 +86,7 @@ export const DESTINATIONS_CATALOG = [
     popularKeywords: ["Airfryer", "Bomba de calor", "Churrasqueira", "Perto da praia"]
   },
 
+  // 5. GRAMADO - RS
   {
     city: "Gramado",
     state: "RS",
@@ -44,6 +107,7 @@ export const DESTINATIONS_CATALOG = [
     popularKeywords: ["Hidromassagem", "Lareira", "Calefação", "Fondue", "Vinho"]
   },
 
+  // 6. CAMPOS DO JORDÃO - SP
   {
     city: "Campos do Jordão",
     state: "SP",
@@ -64,6 +128,7 @@ export const DESTINATIONS_CATALOG = [
     popularKeywords: ["Lareira", "Capivari", "Vista montanha", "Airfryer"]
   },
 
+  // 7. FLORIANÓPOLIS - SC
   {
     city: "Florianópolis",
     state: "SC",
@@ -84,6 +149,7 @@ export const DESTINATIONS_CATALOG = [
     popularKeywords: ["Home office", "600 megas", "Jurerê", "Airfryer", "Rede de proteção"]
   },
 
+  // 8. ILHABELA - SP
   {
     city: "Ilhabela",
     state: "SP",
@@ -98,12 +164,13 @@ export const DESTINATIONS_CATALOG = [
     topAmenitiesToInspect: [
       { label: "Piscina Privativa com Hidro", reason: "Exclusividade e relaxamento após trilhas e praias" },
       { label: "Churrasqueira & Forno de Pizza", reason: "Lazer completo no quiosque" },
-      { label: "Ar-condicionado em Todos os Dormitórios", reason: "Evita calor e pernilongos" },
+      { label: "Ar-condicionado nos 3 Dormitórios", reason: "Evita calor e pernilongos" },
       { label: "Tela Mosquiteira / Proteção", reason: "Essencial para o conforto na ilha" }
     ],
     popularKeywords: ["Feiticeira", "Piscina aquecida", "Churrasqueira", "Forno de pizza"]
   },
 
+  // 9. BÚZIOS - RJ
   {
     city: "Búzios",
     state: "RJ",
@@ -113,17 +180,17 @@ export const DESTINATIONS_CATALOG = [
     icon: "🏖️",
     neighborhoods: ["Geribá", "Ferradura", "João Fernandes", "Ossos", "Tartaruga"],
     tagline: "Charme de Brigitte Bardot & Pôr do Sol",
-    climateTip: "A água do mar em Búzios é famosa por ser fria. Uma piscina aquecida na casa é o maior diferencial de conforto.",
+    climateTip: "A água do mar em Búzios é fria. Uma piscina aquecida na casa é o maior diferencial de conforto.",
     recommendedProfile: "piscina_lazer",
     topAmenitiesToInspect: [
       { label: "Piscina Aquecida com Vista Mar", reason: "Compensa a água gelada das praias da região" },
       { label: "Espaço Gourmet & Adega", reason: "Noites agradáveis com amigos" },
-      { label: "Airfryer & Cafeteira de Cápsula", reason: "Praticidade matinal e petiscos" },
-      { label: "Ar-condicionado Inverter", reason: "Silêncio e economia térmica" }
+      { label: "Airfryer & Cafeteira de Cápsula", reason: "Praticidade matinal e petiscos" }
     ],
     popularKeywords: ["Geribá", "Vista mar", "Piscina aquecida", "Adega"]
   },
 
+  // 10. MONTE VERDE - MG
   {
     city: "Monte Verde",
     state: "MG",
@@ -138,12 +205,32 @@ export const DESTINATIONS_CATALOG = [
     topAmenitiesToInspect: [
       { label: "Ofurô / Hidromassagem Externa Aquecida", reason: "Banho quente com vista para a serra" },
       { label: "Lareira com Lenha à Vontade", reason: "Item mais procurado no inverno" },
-      { label: "Jogo de Fondue & Taças de Vinho", reason: "Tradição gastronômica da cidade" },
-      { label: "Silêncio & Isolamento Acústico", reason: "Paz para recarregar as energias" }
+      { label: "Jogo de Fondue & Taças de Vinho", reason: "Tradição gastronômica da cidade" }
     ],
     popularKeywords: ["Ofurô aquecido", "Lareira", "Fondue", "Pinheiros"]
   },
 
+  // 11. PETRÓPOLIS / ITAIPAVA - RJ
+  {
+    city: "Petrópolis",
+    state: "RJ",
+    label: "Petrópolis & Itaipava, Região Serrana - RJ",
+    environment: "mountain",
+    environmentLabel: "Campo & Serra",
+    icon: "🌲",
+    neighborhoods: ["Itaipava", "Centro Histórico", "Araras", "Valparaíso", "Corrêas"],
+    tagline: "Cidade Imperial, Gastronomia Serrana & Mansões",
+    climateTip: "Casas em Itaipava e Araras com piscina aquecida e sauna são ideais para fins de semana ensolarados mas com noites frias.",
+    recommendedProfile: "piscina_lazer",
+    topAmenitiesToInspect: [
+      { label: "Piscina Aquecida & Sauna", reason: "Conjunto perfeito para a serra fluminense" },
+      { label: "Lareira & Área Gourmet", reason: "Aconchego para noites frias" },
+      { label: "Cozinha Completa com Airfryer", reason: "Praticidade em grupos e famílias" }
+    ],
+    popularKeywords: ["Itaipava", "Piscina aquecida", "Lareira", "Sauna"]
+  },
+
+  // 12. SÃO PAULO - SP
   {
     city: "São Paulo",
     state: "SP",
@@ -158,12 +245,12 @@ export const DESTINATIONS_CATALOG = [
     topAmenitiesToInspect: [
       { label: "Wi-Fi Fibra 500M+ & Cadeira Herman Miller", reason: "Garante reuniões sem falhas" },
       { label: "Cozinha Compacta com Airfryer & Nespresso", reason: "Rapidez entre compromissos" },
-      { label: "Piscina Aquecida no Rooftop / Prédio", reason: "Lazer sem sair do condomínio" },
-      { label: "Cortinas Blackout & Vidros Antirruído", reason: "Sono tranquilo sem barulho da avenida" }
+      { label: "Piscina Aquecida no Rooftop / Prédio", reason: "Lazer sem sair do condomínio" }
     ],
     popularKeywords: ["Vila Madalena", "Pinheiros", "Home office", "Rooftop"]
   },
 
+  // 13. RIO DE JANEIRO - RJ
   {
     city: "Rio de Janeiro",
     state: "RJ",
@@ -178,7 +265,6 @@ export const DESTINATIONS_CATALOG = [
     topAmenitiesToInspect: [
       { label: "Ar-condicionado em Todos os Cômodos", reason: "Calor forte em quase todas as estações" },
       { label: "Vista para o Mar ou Perto da Praia", reason: "Fazer tudo a pé até a areia" },
-      { label: "Redes de Proteção nas Janelas", reason: "Tranquilidade para quem viaja com filhos" },
       { label: "Cozinha com Airfryer", reason: "Alimentação prática e saudável" }
     ],
     popularKeywords: ["Posto 9", "Ipanema", "Vista mar", "Ar split"]
@@ -197,7 +283,8 @@ export function searchDestinations(query) {
     const stateMatch = dest.state.toLowerCase() === cleanQ || dest.label.toLowerCase().includes(cleanQ);
     const neighborhoodMatch = dest.neighborhoods.some((n) => n.toLowerCase().includes(cleanQ));
     const keywordMatch = dest.popularKeywords.some((k) => k.toLowerCase().includes(cleanQ));
-    return cityMatch || stateMatch || neighborhoodMatch || keywordMatch;
+    const taglineMatch = dest.tagline.toLowerCase().includes(cleanQ);
+    return cityMatch || stateMatch || neighborhoodMatch || keywordMatch || taglineMatch;
   });
 }
 
@@ -207,7 +294,17 @@ export function searchDestinations(query) {
 export function getDestinationInsight(cityNameOrState) {
   if (!cityNameOrState || cityNameOrState === "ALL") return null;
   const clean = cityNameOrState.trim().toLowerCase();
-  return DESTINATIONS_CATALOG.find(
-    (d) => d.city.toLowerCase() === clean || d.label.toLowerCase().includes(clean)
-  ) || null;
+
+  // Try exact or partial match
+  const found = DESTINATIONS_CATALOG.find(
+    (d) =>
+      d.city.toLowerCase() === clean ||
+      clean.includes(d.city.toLowerCase()) ||
+      d.label.toLowerCase().includes(clean)
+  );
+
+  if (found) return found;
+
+  // If user typed something like "serra negra" or "serra", match by includes
+  return DESTINATIONS_CATALOG.find((d) => d.city.toLowerCase().includes(clean) || clean.includes(d.city.toLowerCase())) || null;
 }
