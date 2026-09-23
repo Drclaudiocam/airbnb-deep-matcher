@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar } from "./components/Navbar.jsx";
 import { GeoSearchBar } from "./components/GeoSearchBar.jsx";
+import { LocationInsightsBanner } from "./components/LocationInsightsBanner.jsx";
 import { ProfileSelector } from "./components/ProfileSelector.jsx";
 import { UrlInputBar } from "./components/UrlInputBar.jsx";
 import { ListingCard } from "./components/ListingCard.jsx";
@@ -253,6 +254,7 @@ export function App() {
   );
 
   const activeProfile = profiles.find((p) => p.id === activeProfileId) || profiles[0];
+  const activeLocation = geoFilters.city !== "ALL" ? geoFilters.city : geoFilters.query || "";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-rose-500 selection:text-white pb-20">
@@ -293,7 +295,7 @@ export function App() {
           </div>
         </section>
 
-        {/* 1. Geographic & Environment Search Bar */}
+        {/* 1. Geographic Search Bar with Autocomplete */}
         <section>
           <GeoSearchBar
             onSearchGeo={handleSearchGeo}
@@ -301,7 +303,23 @@ export function App() {
           />
         </section>
 
-        {/* 2. Profile Selector Section */}
+        {/* 2. Dynamic Location Insights & Recommendations (Adapts to Active Location) */}
+        <section>
+          <LocationInsightsBanner
+            currentLocation={activeLocation}
+            currentEnvironment={geoFilters.environment}
+            onSelectQuickKeyword={(kw) => {
+              // Trigger custom keyword search
+              const el = document.getElementById("custom-keyword-input");
+              if (el) {
+                el.value = kw;
+                el.focus();
+              }
+            }}
+          />
+        </section>
+
+        {/* 3. Profile Selector Section */}
         <section>
           <ProfileSelector
             profiles={profiles}
@@ -312,7 +330,7 @@ export function App() {
           />
         </section>
 
-        {/* 3. URL Ingestion & 1-Click Test Drive Section */}
+        {/* 4. URL Ingestion & 1-Click Test Drive Section */}
         <section>
           <UrlInputBar
             onAnalyzeUrls={handleAnalyzeUrls}
@@ -322,8 +340,8 @@ export function App() {
           />
         </section>
 
-        {/* 4. Ad-hoc Dynamic Keyword Search */}
-        <section>
+        {/* 5. Ad-hoc Dynamic Keyword Search */}
+        <section id="custom-keyword-section">
           <CustomKeywordSearch listings={listings} />
         </section>
 
@@ -332,7 +350,7 @@ export function App() {
           <div className="p-12 flex flex-col items-center justify-center space-y-3 bg-slate-900/60 rounded-3xl border border-slate-800">
             <Loader2 className="w-8 h-8 text-rose-500 animate-spin" />
             <span className="text-sm font-bold text-slate-300">
-              Auditando descrições, comodidades e centenas de avaliações...
+              Auditando descrições, comodidades e centenas de avaliações para esta região...
             </span>
           </div>
         )}
@@ -345,7 +363,7 @@ export function App() {
                 <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                   <span>Acomodações Encontradas ({listings.length})</span>
                   <span className="text-xs font-semibold text-slate-400">
-                    (Classificadas por Match com o perfil {activeProfile?.name})
+                    {activeLocation ? `em ${activeLocation}` : "no Brasil"} • Classificadas por Match com o perfil {activeProfile?.name}
                   </span>
                 </h2>
               </div>
