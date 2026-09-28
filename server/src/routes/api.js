@@ -5,6 +5,7 @@ import { ScraperService } from "../services/scraperService.js";
 import { AnalysisEngine } from "../services/analysisEngine.js";
 import { AuthService } from "../services/authService.js";
 import { CepService } from "../services/cepService.js";
+import { WebAccommodationService } from "../services/webAccommodationService.js";
 
 const router = express.Router();
 
@@ -159,7 +160,7 @@ router.get("/search-geo", async (req, res) => {
       }
     }
 
-    // Dynamic synthesis if 0 matches for the searched location
+    // If 0 matches in static benchmarks, search the internet and geographically ground accommodations
     if (filtered.length === 0 && (normCity || normQuery || resolvedLocation)) {
       const cityName = resolvedLocation?.city || (city && city !== "ALL" ? city : query) || "Brasil";
       const stateName = resolvedLocation?.state || (state && state !== "ALL" ? state : "SP");
@@ -167,102 +168,23 @@ router.get("/search-geo", async (req, res) => {
       const baseLat = resolvedLocation?.lat || -22.6125;
       const baseLng = resolvedLocation?.lng || -46.7022;
 
-      filtered = [
-        {
-          id: `dynamic_${normalizeText(cityName)}_villa`,
-          url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
-          title: `Villa Refúgio em ${cityName} (${neighName}) - Piscina Aquecida & Gourmet`,
-          location: `${neighName}, ${cityName} - ${stateName}`,
-          state: stateName,
+      try {
+        const webAccommodations = await WebAccommodationService.searchInternetAccommodations({
           city: cityName,
+          state: stateName,
           neighborhood: neighName,
-          cep: resolvedLocation?.formattedCep || "13930-000",
-          lat: baseLat + 0.003,
-          lng: baseLng - 0.002,
-          environment: /praia|mar|litoral/i.test(cityName) ? "beach" : "mountain",
-          type: "Casa inteira",
-          superhost: true,
-          rating: 4.96,
-          reviewCount: 48,
-          pricePerNight: 850,
-          cleaningFee: 180,
-          capacity: { guests: 8, bedrooms: 3, beds: 5, baths: 3 },
-          images: [
-            "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
-          ],
-          officialAmenities: [
-            "Piscina privativa",
-            "Piscina aquecida",
-            "Ar-condicionado",
-            "Cozinha completa",
-            "Wi-Fi",
-            "Churrasqueira"
-          ],
-          hostDescription: `
-            Casa espetacular em ${cityName} (${neighName})!
-            - Piscina aquecida privativa com bomba de calor elétrica (mantém a água a 30°C mesmo em dias frios).
-            - Cozinha completa com Airfryer Mondial 5L, Cafeteira Nespresso, micro-ondas e lava-louças.
-            - 3 suítes amplas climatizadas com ar split potente e cortinas blackout.
-            - Wi-Fi Fibra de 400 Mbps e quintal cercado para pets.
-          `,
-          guestReviews: [
-            {
-              id: "rev_dyn_1",
-              author: "Mariana Silva",
-              date: "Fevereiro de 2026",
-              rating: 5,
-              text: `A piscina aquecida em ${cityName} foi o ponto alto da viagem, meus filhos ficaram nela até à noite pois a água estava bem quentinha! A cozinha com airfryer ajudou demais.`
-            }
-          ]
-        },
-        {
-          id: `dynamic_${normalizeText(cityName)}_chale`,
-          url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
-          title: `Chalé Suíço em ${cityName} - Hidromassagem Aquecida & Lareira`,
-          location: `Alto da Serra, ${cityName} - ${stateName}`,
-          state: stateName,
-          city: cityName,
-          neighborhood: "Alto da Serra",
-          cep: resolvedLocation?.formattedCep || "13930-000",
-          lat: baseLat - 0.004,
-          lng: baseLng + 0.003,
-          environment: /praia|mar|litoral/i.test(cityName) ? "beach" : "mountain",
-          type: "Chalé inteiro",
-          superhost: true,
-          rating: 4.93,
-          reviewCount: 38,
-          pricePerNight: 780,
-          cleaningFee: 150,
-          capacity: { guests: 4, bedrooms: 2, beds: 3, baths: 2 },
-          images: [
-            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80"
-          ],
-          officialAmenities: [
-            "Banheira de hidromassagem",
-            "Lareira",
-            "Wi-Fi",
-            "Cozinha completa"
-          ],
-          hostDescription: `
-            Chalé aconchegante em ${cityName}.
-            - Hidromassagem aquecida a gás.
-            - Lareira interna a lenha com cesto cortesia.
-            - Cozinha com Airfryer, cafeteira Dolce Gusto e fogão.
-            - Wi-Fi de alta velocidade.
-          `,
-          guestReviews: [
-            {
-              id: "rev_dyn_2",
-              author: "Lucas Prado",
-              date: "Janeiro de 2026",
-              rating: 5,
-              text: `A hidro aquecida em ${cityName} é maravilhosa, água bem quente e relaxante.`
-            }
-          ]
+          cep: resolvedLocation?.formattedCep || cep || "13930-000",
+          lat: baseLat,
+          lng: baseLng,
+          query: query || cityName
+        });
+
+        if (webAccommodations && webAccommodations.length > 0) {
+          filtered = webAccommodations;
         }
-      ];
+      } catch (webErr) {
+        console.warn("[API] Web accommodation search failed, proceeding with fallback:", webErr.message);
+      }
     }
 
     const comparison = AnalysisEngine.compareListings(filtered, activeProfile);

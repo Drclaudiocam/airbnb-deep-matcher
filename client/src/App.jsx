@@ -15,6 +15,7 @@ import { ExportShareModal } from "./components/ExportShareModal.jsx";
 import { CustomKeywordSearch } from "./components/CustomKeywordSearch.jsx";
 import { QuickHelpModal } from "./components/QuickHelpModal.jsx";
 import { AirbnbAuthModal } from "./components/AirbnbAuthModal.jsx";
+import { ListingDetailsModal } from "./components/ListingDetailsModal.jsx";
 import {
   Sparkles,
   Trophy,
@@ -72,6 +73,7 @@ export function App() {
   const [wishlists, setWishlists] = useState([]);
 
   // Modal States
+  const [selectedListingDetails, setSelectedListingDetails] = useState(null);
   const [inspectModal, setInspectModal] = useState({ isOpen: false, criterionKey: null, listing: null });
   const [isVotingOpen, setIsVotingOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -528,6 +530,7 @@ export function App() {
                           key={listing.id}
                           listing={listing}
                           isTopPick={idx === 0}
+                          onSelectListing={setSelectedListingDetails}
                           onInspectCriterion={handleInspectCriterion}
                           onOpenVoting={() => setIsVotingOpen(true)}
                         />
@@ -540,6 +543,7 @@ export function App() {
                     <InteractiveMap
                       listings={filteredListings}
                       centerLocation={resolvedLocation}
+                      onSelectListing={setSelectedListingDetails}
                       onInspectListing={handleInspectCriterion}
                     />
                   </div>
@@ -568,6 +572,7 @@ export function App() {
                           key={listing.id}
                           listing={listing}
                           isTopPick={idx === 0}
+                          onSelectListing={setSelectedListingDetails}
                           onInspectCriterion={handleInspectCriterion}
                           onOpenVoting={() => setIsVotingOpen(true)}
                         />
@@ -582,6 +587,7 @@ export function App() {
                   <InteractiveMap
                     listings={filteredListings}
                     centerLocation={resolvedLocation}
+                    onSelectListing={setSelectedListingDetails}
                     onInspectListing={handleInspectCriterion}
                   />
                 </div>
@@ -637,6 +643,15 @@ export function App() {
       </footer>
 
       {/* Modals */}
+      <ListingDetailsModal
+        isOpen={Boolean(selectedListingDetails)}
+        onClose={() => setSelectedListingDetails(null)}
+        listing={selectedListingDetails}
+        taxonomy={taxonomy}
+        onInspectCriterion={handleInspectCriterion}
+        onOpenVoting={(id) => setIsVotingOpen(true)}
+      />
+
       <AirbnbAuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}

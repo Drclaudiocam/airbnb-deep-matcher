@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Star, ShieldCheck, MapPin, Users, Bed, Bath, ExternalLink, ThumbsUp, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ShieldCheck, MapPin, Users, Bed, Bath, ExternalLink, ThumbsUp, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 
 export function ListingCard({
   listing,
   isTopPick,
+  onSelectListing,
   onInspectCriterion,
   onOpenVoting
 }) {
@@ -39,7 +40,10 @@ export function ListingCard({
       )}
 
       {/* Image Carousel */}
-      <div className="relative h-52 w-full overflow-hidden group bg-slate-950">
+      <div
+        onClick={() => onSelectListing && onSelectListing(listing)}
+        className="relative h-52 w-full overflow-hidden group bg-slate-950 cursor-pointer"
+      >
         <img
           src={images[activeImgIdx]}
           alt={listing.title}
@@ -122,7 +126,10 @@ export function ListingCard({
           </div>
 
           {/* Title */}
-          <h4 className="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug hover:text-rose-400 transition cursor-pointer">
+          <h4
+            onClick={() => onSelectListing && onSelectListing(listing)}
+            className="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug hover:text-rose-400 transition cursor-pointer"
+          >
             {listing.title}
           </h4>
 
@@ -143,7 +150,10 @@ export function ListingCard({
           </div>
 
           {/* Fidelity Score & Stats */}
-          <div className="mt-3 p-3 bg-slate-950/60 rounded-2xl border border-slate-800/80">
+          <div
+            onClick={() => onSelectListing && onSelectListing(listing)}
+            className="mt-3 p-3 bg-slate-950/60 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1.5">
                 <ShieldCheck
@@ -193,29 +203,40 @@ export function ListingCard({
         </div>
 
         {/* Card Footer Actions */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-          <a
-            href={listing.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-slate-400 hover:text-white flex items-center space-x-1 transition font-medium"
-          >
-            <span>Ver no Airbnb</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
-
+        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
           <button
-            onClick={() => onOpenVoting(listing.id)}
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 transition flex items-center space-x-1.5"
+            type="button"
+            onClick={() => onSelectListing && onSelectListing(listing)}
+            className="text-xs text-slate-300 hover:text-white flex items-center space-x-1 transition font-bold py-1 px-2.5 rounded-lg bg-slate-800/60 hover:bg-slate-800"
           >
-            <ThumbsUp className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Votar</span>
-            {listing.votes?.likes > 0 && (
-              <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-1 rounded">
-                +{listing.votes.likes}
-              </span>
-            )}
+            <Eye className="w-3.5 h-3.5 text-rose-400" />
+            <span>Ver Detalhes</span>
           </button>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => onOpenVoting(listing.id)}
+              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 transition flex items-center space-x-1.5"
+            >
+              <ThumbsUp className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Votar</span>
+              {listing.votes?.likes > 0 && (
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-1 rounded">
+                  +{listing.votes.likes}
+                </span>
+              )}
+            </button>
+
+            <a
+              href={listing.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg bg-slate-800/40 hover:bg-slate-800 transition"
+              title="Abrir no Airbnb"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </div>
     </div>
