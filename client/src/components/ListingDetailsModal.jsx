@@ -18,7 +18,8 @@ import {
   Search,
   Share2,
   Sparkles,
-  Info
+  Info,
+  Globe
 } from "lucide-react";
 
 export function ListingDetailsModal({
@@ -59,8 +60,8 @@ export function ListingDetailsModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-fade-in overflow-y-auto">
       <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 bg-slate-950/80 sticky top-0 z-30 backdrop-blur-md">
-          <div className="flex items-center space-x-2.5 truncate max-w-[80%]">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 bg-slate-950/90 sticky top-0 z-30 backdrop-blur-md">
+          <div className="flex items-center space-x-2.5 truncate max-w-[70%]">
             <span className="px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold shrink-0">
               {listing.type || "Acomodação"}
             </span>
@@ -69,12 +70,25 @@ export function ListingDetailsModal({
             </h3>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-full bg-slate-800/80 hover:bg-slate-700 transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center space-x-2">
+            <a
+              href={listing.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-black rounded-xl transition shadow-md flex items-center space-x-1.5"
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Abrir no Airbnb</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+
+            <button
+              onClick={onClose}
+              className="p-2 text-slate-400 hover:text-white rounded-full bg-slate-800/80 hover:bg-slate-700 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Modal Scrollable Body */}
@@ -196,7 +210,7 @@ export function ListingDetailsModal({
           </div>
 
           {/* 3. Location & Coordinates Info */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/50 rounded-xl border border-slate-800 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-slate-950/60 rounded-2xl border border-slate-800 text-xs">
             <div className="flex items-center space-x-2 text-slate-300">
               <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
               <span>
@@ -339,27 +353,26 @@ export function ListingDetailsModal({
 
         {/* Modal Footer Actions */}
         <div className="p-4 sm:p-5 border-t border-slate-800 bg-slate-950/90 flex flex-wrap items-center justify-between gap-3 sticky bottom-0 z-30 backdrop-blur-md">
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={() => onOpenVoting && onOpenVoting(listing.id)}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center space-x-2"
-            >
-              <ThumbsUp className="w-4 h-4 text-indigo-400" />
-              <span>Votar para a Viagem</span>
-              {listing.votes?.likes > 0 && (
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">
-                  +{listing.votes.likes}
-                </span>
-              )}
-            </button>
-          </div>
+          <button
+            onClick={() => onOpenVoting && onOpenVoting(listing.id)}
+            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center space-x-2"
+          >
+            <ThumbsUp className="w-4 h-4 text-indigo-400" />
+            <span>Votar para a Viagem</span>
+            {listing.votes?.likes > 0 && (
+              <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">
+                +{listing.votes.likes}
+              </span>
+            )}
+          </button>
 
           <a
             href={listing.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-2.5 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs sm:text-sm font-extrabold rounded-xl transition shadow-lg shadow-rose-600/30 flex items-center space-x-2"
+            className="px-6 py-3 bg-gradient-to-r from-rose-600 via-rose-500 to-rose-600 hover:from-rose-500 hover:to-rose-400 text-white text-xs sm:text-sm font-black rounded-2xl transition shadow-xl shadow-rose-600/30 flex items-center space-x-2 hover:scale-[1.02] active:scale-[0.98]"
           >
+            <Globe className="w-4 h-4" />
             <span>Ver Anúncio Oficial no Airbnb</span>
             <ExternalLink className="w-4 h-4" />
           </a>
