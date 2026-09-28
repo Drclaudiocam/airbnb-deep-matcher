@@ -4,13 +4,13 @@ import { BENCHMARK_LISTINGS } from "../data/benchmarkListings.js";
 import { ScraperService } from "../services/scraperService.js";
 import { AnalysisEngine } from "../services/analysisEngine.js";
 import { AuthService } from "../services/authService.js";
+import { CepService } from "../services/cepService.js";
 
 const router = express.Router();
 
 let userProfiles = [...DEFAULT_PROFILES];
 const groupVotes = {};
 
-// Helper to normalize strings (remove accents and lower case)
 function normalizeText(str) {
   if (!str) return "";
   return str
@@ -66,185 +66,226 @@ router.post("/profiles", (req, res) => {
 });
 
 /**
- * Get available geographic destinations and environment types
+ * CEP Lookup Endpoint (BrasilAPI + ViaCEP + Nominatim)
  */
-router.get("/destinations", (req, res) => {
-  const states = [...new Set(BENCHMARK_LISTINGS.map((l) => l.state).filter(Boolean))];
-  const cities = [...new Set(BENCHMARK_LISTINGS.map((l) => l.city).filter(Boolean))];
-  
-  const environments = [
-    { id: "all", label: "✨ Todos os Ambientes", count: BENCHMARK_LISTINGS.length },
-    { id: "beach", label: "🏖️ Praia & Litoral", count: BENCHMARK_LISTINGS.filter((l) => l.environment === "beach").length },
-    { id: "mountain", label: "🌲 Campo & Serra", count: BENCHMARK_LISTINGS.filter((l) => l.environment === "mountain").length },
-    { id: "urban", label: "🏙️ Urbano & Metrópole", count: BENCHMARK_LISTINGS.filter((l) => l.environment === "urban").length }
-  ];
+router.get("/cep/lookup", async (req, res) => {
+  try {
+    const { cep } = req.query;
+    if (!cep) {
+      return res.status(400).json({ error: "Parâmetro 'cep' é obrigatório." });
+    }
 
-  res.json({ states, cities, environments, totalCount: BENCHMARK_LISTINGS.length });
+    const cepData = await CepService.lookupCep(cep);
+    res.json(cepData);
+  } catch (err) {
+    res.status(400).json({ error: err.message || "Erro ao consultar o CEP." });
+  }
 });
 
 /**
- * Geographic search with normalized, accent-insensitive search and dynamic city fallbacks
+ * Address / Neighborhood Search Endpoint
  */
-router.get("/search-geo", (req, res) => {
-  const { state, city, environment, query, profileId } = req.query;
-  const activeProfile = userProfiles.find((p) => p.id === profileId) || DEFAULT_PROFILES[0];
+router.get("/cep/search-address", async (req, res) => {
+  try {
+    const { q, city, state } = req.query;
+    if (!q) {
+      return res.status(400).json({ error: "Parâmetro 'q' (rua/bairro) é obrigatório." });
+    }
 
-  const normQuery = normalizeText(query);
-  const normCity = normalizeText(city);
-  const normState = normalizeText(state);
-
-  let filtered = [...BENCHMARK_LISTINGS];
-
-  // 1. Filter by environment if specified and not 'all'
-  if (environment && environment !== "all") {
-    filtered = filtered.filter((l) => l.environment === environment);
+    const addresses = await CepService.searchAddress(q, city, state);
+    res.json(addresses);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao buscar logradouros: " + err.message });
   }
+});
 
-  // 2. Filter by state if specified and not 'ALL'
-  if (normState && normState !== "all") {
-    filtered = filtered.filter((l) => normalizeText(l.state) === normState);
-  }
+/**
+ * Geographic Search by CEP, Neighborhood, City, State and Filters
+ */
+router.get("/search-geo", async (req, res) => {
+  try {
+    const { cep, state, city, neighborhood, environment, query, profileId } = req.query;
+    const activeProfile = userProfiles.find((p) => p.id === profileId) || DEFAULT_PROFILES[0];
 
-  // 3. Filter by city or search query with accent-insensitive search
-  if ((normCity && normCity !== "all") || normQuery) {
-    const searchTerm = normCity !== "all" && normCity ? normCity : normQuery;
+    let resolvedLocation = null;
 
-    filtered = filtered.filter((l) => {
-      const lCity = normalizeText(l.city);
-      const lLoc = normalizeText(l.location);
-      const lTitle = normalizeText(l.title);
-      const lDesc = normalizeText(l.hostDescription);
-
-      return (
-        lCity.includes(searchTerm) ||
-        searchTerm.includes(lCity) ||
-        lLoc.includes(searchTerm) ||
-        lTitle.includes(searchTerm) ||
-        lDesc.includes(searchTerm)
-      );
-    });
-  }
-
-  // 4. Dynamic Auto-Generator for any arbitrary city searched if 0 matches
-  if (filtered.length === 0 && (normQuery || (normCity && normCity !== "all"))) {
-    const cityName = city && city !== "ALL" ? city : query;
-    const isBeachCity = /praia|mar|litoral|ilha|ocean/i.test(cityName);
-    const isMountainCity = /serra|campo|montanha|monte|val/i.test(cityName);
-    const envType = isBeachCity ? "beach" : isMountainCity ? "mountain" : "countryside";
-
-    filtered = [
-      {
-        id: `dynamic_${normalizeText(cityName)}_villa`,
-        url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
-        title: `Villa Refúgio em ${cityName} - Piscina Aquecida Privativa & Gourmet`,
-        location: `Centro / Zona Nobre, ${cityName} - Brasil`,
-        state: state && state !== "ALL" ? state : "SP",
-        city: cityName,
-        environment: envType,
-        type: "Casa inteira",
-        superhost: true,
-        rating: 4.96,
-        reviewCount: 45,
-        pricePerNight: 820,
-        cleaningFee: 180,
-        capacity: { guests: 8, bedrooms: 3, beds: 5, baths: 3 },
-        images: [
-          "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80"
-        ],
-        officialAmenities: [
-          "Piscina privativa",
-          "Piscina aquecida",
-          "Ar-condicionado",
-          "Cozinha completa",
-          "Wi-Fi",
-          "Churrasqueira"
-        ],
-        hostDescription: `
-          Bem-vindos à nossa casa de temporada em ${cityName}!
-          - Piscina privativa com aquecimento por bomba de calor elétrica (água a 30°C mesmo em dias nublados).
-          - Cozinha gourmet completa com Fritadeira Airfryer Mondial 5L, Cafeteira Nespresso, micro-ondas e lava-louças.
-          - 3 suítes climatizadas com ar-condicionado potente e cortinas blackout.
-          - Internet Fibra Óptica de 400 Mbps e quintal cercado para pets.
-        `,
-        guestReviews: [
-          {
-            id: "rev_dyn_1",
-            author: "Juliana Martins",
-            date: "Fevereiro de 2026",
-            rating: 5,
-            text: `Amamos nossa estadia em ${cityName}! A piscina aquecida foi o ponto alto, água bem quentinha à noite. A cozinha tem airfryer e tudo o que precisamos.`
-          },
-          {
-            id: "rev_dyn_2",
-            author: "Marcos Vinicius",
-            date: "Janeiro de 2026",
-            rating: 5,
-            text: `Casa impecável em ${cityName}. O Wi-Fi voou e o ar condicionado em todos os quartos gelou perfeitamente.`
-          }
-        ]
-      },
-      {
-        id: `dynamic_${normalizeText(cityName)}_chale`,
-        url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
-        title: `Chalé Panorâmico ${cityName} - Hidromassagem Aquecida & Lareira`,
-        location: `Vista das Montanhas, ${cityName} - Brasil`,
-        state: state && state !== "ALL" ? state : "SP",
-        city: cityName,
-        environment: envType,
-        type: "Chalé de campo inteiro",
-        superhost: true,
-        rating: 4.92,
-        reviewCount: 38,
-        pricePerNight: 750,
-        cleaningFee: 150,
-        capacity: { guests: 4, bedrooms: 2, beds: 3, baths: 2 },
-        images: [
-          "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
-          "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"
-        ],
-        officialAmenities: [
-          "Banheira de hidromassagem",
-          "Lareira",
-          "Wi-Fi",
-          "Cozinha completa"
-        ],
-        hostDescription: `
-          Refúgio acolhedor em ${cityName} cercado pela natureza.
-          - Banheira de hidromassagem dupla aquecida a gás.
-          - Lareira interna a lenha com cesto cortesia.
-          - Cozinha equipada com Airfryer, cafeteira Dolce Gusto e forno.
-          - Wi-Fi de alta velocidade.
-        `,
-        guestReviews: [
-          {
-            id: "rev_dyn_3",
-            author: "Ana Carolina",
-            date: "Janeiro de 2026",
-            rating: 5,
-            text: `Experiência mágica em ${cityName}. A hidro aquecida é quentinha de verdade e a lareira aquece toda a sala.`
-          }
-        ]
+    // 1. If CEP is passed, lookup details and coordinates
+    if (cep) {
+      try {
+        resolvedLocation = await CepService.lookupCep(cep);
+      } catch (e) {
+        console.warn("[API] CEP lookup failed in geo search:", e.message);
       }
-    ];
+    }
+
+    const targetCity = resolvedLocation?.city || city;
+    const targetState = resolvedLocation?.state || state;
+    const targetNeighborhood = resolvedLocation?.neighborhood || neighborhood;
+
+    const normQuery = normalizeText(query);
+    const normCity = normalizeText(targetCity);
+    const normState = normalizeText(targetState);
+    const normNeighborhood = normalizeText(targetNeighborhood);
+
+    let filtered = [...BENCHMARK_LISTINGS];
+
+    // Filter by environment if specified and not 'all'
+    if (environment && environment !== "all") {
+      filtered = filtered.filter((l) => l.environment === environment);
+    }
+
+    // Filter by state if specified and not 'ALL'
+    if (normState && normState !== "all") {
+      filtered = filtered.filter((l) => normalizeText(l.state) === normState);
+    }
+
+    // Filter by city or neighborhood
+    if (normCity && normCity !== "all") {
+      filtered = filtered.filter((l) => {
+        const lCity = normalizeText(l.city);
+        const lLoc = normalizeText(l.location);
+        return lCity.includes(normCity) || normCity.includes(lCity) || lLoc.includes(normCity);
+      });
+    }
+
+    if (normNeighborhood && normNeighborhood !== "all") {
+      const matchNeigh = filtered.filter((l) => {
+        const lNeigh = normalizeText(l.neighborhood);
+        const lLoc = normalizeText(l.location);
+        return lNeigh.includes(normNeighborhood) || lLoc.includes(normNeighborhood);
+      });
+      if (matchNeigh.length > 0) {
+        filtered = matchNeigh;
+      }
+    }
+
+    // Dynamic synthesis if 0 matches for the searched location
+    if (filtered.length === 0 && (normCity || normQuery || resolvedLocation)) {
+      const cityName = resolvedLocation?.city || (city && city !== "ALL" ? city : query) || "Brasil";
+      const stateName = resolvedLocation?.state || (state && state !== "ALL" ? state : "SP");
+      const neighName = resolvedLocation?.neighborhood || "Centro";
+      const baseLat = resolvedLocation?.lat || -22.6125;
+      const baseLng = resolvedLocation?.lng || -46.7022;
+
+      filtered = [
+        {
+          id: `dynamic_${normalizeText(cityName)}_villa`,
+          url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
+          title: `Villa Refúgio em ${cityName} (${neighName}) - Piscina Aquecida & Gourmet`,
+          location: `${neighName}, ${cityName} - ${stateName}`,
+          state: stateName,
+          city: cityName,
+          neighborhood: neighName,
+          cep: resolvedLocation?.formattedCep || "13930-000",
+          lat: baseLat + 0.003,
+          lng: baseLng - 0.002,
+          environment: /praia|mar|litoral/i.test(cityName) ? "beach" : "mountain",
+          type: "Casa inteira",
+          superhost: true,
+          rating: 4.96,
+          reviewCount: 48,
+          pricePerNight: 850,
+          cleaningFee: 180,
+          capacity: { guests: 8, bedrooms: 3, beds: 5, baths: 3 },
+          images: [
+            "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+          ],
+          officialAmenities: [
+            "Piscina privativa",
+            "Piscina aquecida",
+            "Ar-condicionado",
+            "Cozinha completa",
+            "Wi-Fi",
+            "Churrasqueira"
+          ],
+          hostDescription: `
+            Casa espetacular em ${cityName} (${neighName})!
+            - Piscina aquecida privativa com bomba de calor elétrica (mantém a água a 30°C mesmo em dias frios).
+            - Cozinha completa com Airfryer Mondial 5L, Cafeteira Nespresso, micro-ondas e lava-louças.
+            - 3 suítes amplas climatizadas com ar split potente e cortinas blackout.
+            - Wi-Fi Fibra de 400 Mbps e quintal cercado para pets.
+          `,
+          guestReviews: [
+            {
+              id: "rev_dyn_1",
+              author: "Mariana Silva",
+              date: "Fevereiro de 2026",
+              rating: 5,
+              text: `A piscina aquecida em ${cityName} foi o ponto alto da viagem, meus filhos ficaram nela até à noite pois a água estava bem quentinha! A cozinha com airfryer ajudou demais.`
+            }
+          ]
+        },
+        {
+          id: `dynamic_${normalizeText(cityName)}_chale`,
+          url: `https://www.airbnb.com.br/rooms/${Math.floor(10000000 + Math.random() * 90000000)}`,
+          title: `Chalé Suíço em ${cityName} - Hidromassagem Aquecida & Lareira`,
+          location: `Alto da Serra, ${cityName} - ${stateName}`,
+          state: stateName,
+          city: cityName,
+          neighborhood: "Alto da Serra",
+          cep: resolvedLocation?.formattedCep || "13930-000",
+          lat: baseLat - 0.004,
+          lng: baseLng + 0.003,
+          environment: /praia|mar|litoral/i.test(cityName) ? "beach" : "mountain",
+          type: "Chalé inteiro",
+          superhost: true,
+          rating: 4.93,
+          reviewCount: 38,
+          pricePerNight: 780,
+          cleaningFee: 150,
+          capacity: { guests: 4, bedrooms: 2, beds: 3, baths: 2 },
+          images: [
+            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80"
+          ],
+          officialAmenities: [
+            "Banheira de hidromassagem",
+            "Lareira",
+            "Wi-Fi",
+            "Cozinha completa"
+          ],
+          hostDescription: `
+            Chalé aconchegante em ${cityName}.
+            - Hidromassagem aquecida a gás.
+            - Lareira interna a lenha com cesto cortesia.
+            - Cozinha com Airfryer, cafeteira Dolce Gusto e fogão.
+            - Wi-Fi de alta velocidade.
+          `,
+          guestReviews: [
+            {
+              id: "rev_dyn_2",
+              author: "Lucas Prado",
+              date: "Janeiro de 2026",
+              rating: 5,
+              text: `A hidro aquecida em ${cityName} é maravilhosa, água bem quente e relaxante.`
+            }
+          ]
+        }
+      ];
+    }
+
+    const comparison = AnalysisEngine.compareListings(filtered, activeProfile);
+    const listingsWithVotes = comparison.listings.map((l) => ({
+      ...l,
+      votes: groupVotes[l.id] || { likes: 0, dislikes: 0, voters: [] }
+    }));
+
+    res.json({
+      ...comparison,
+      listings: listingsWithVotes,
+      resolvedLocation: resolvedLocation || {
+        city: targetCity,
+        state: targetState,
+        neighborhood: targetNeighborhood,
+        lat: filtered[0]?.lat || -22.6125,
+        lng: filtered[0]?.lng || -46.7022
+      }
+    });
+  } catch (err) {
+    console.error("[API] Error in search-geo:", err);
+    res.status(500).json({ error: "Erro na busca geográfica: " + err.message });
   }
-
-  // 5. Final fallback if empty
-  if (filtered.length === 0) {
-    filtered = BENCHMARK_LISTINGS;
-  }
-
-  const comparison = AnalysisEngine.compareListings(filtered, activeProfile);
-  const listingsWithVotes = comparison.listings.map((l) => ({
-    ...l,
-    votes: groupVotes[l.id] || { likes: 0, dislikes: 0, voters: [] }
-  }));
-
-  res.json({
-    ...comparison,
-    listings: listingsWithVotes,
-    queryFilters: { state, city, environment, query }
-  });
 });
 
 /**

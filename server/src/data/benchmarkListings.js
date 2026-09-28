@@ -1,10 +1,10 @@
 /**
- * High-fidelity dataset of Airbnb listings with geographic metadata (state, city, environment)
+ * High-fidelity dataset of Airbnb listings with geographic metadata (state, city, environment, coordinates, neighborhood, CEP)
  * covering Beaches (Praia), Mountains/Countryside (Campo/Serra), and Urban destinations.
  */
 
 export const BENCHMARK_LISTINGS = [
-  // 1. CAMPO & SERRA - SERRA NEGRA (SP) - NOVO
+  // 1. CAMPO & SERRA - SERRA NEGRA (SP) - CHALÉ MIRANTE
   {
     id: "airbnb_serra_negra_chale_montanha",
     url: "https://www.airbnb.com.br/rooms/11928374",
@@ -12,6 +12,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Refúgio da Serra, Serra Negra - SP",
     state: "SP",
     city: "Serra Negra",
+    neighborhood: "Refúgio da Serra",
+    cep: "13930-000",
+    lat: -22.6085,
+    lng: -46.7092,
     environment: "mountain",
     type: "Chalé de montanha inteiro",
     superhost: true,
@@ -68,6 +72,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Bairro das Posses, Serra Negra - SP",
     state: "SP",
     city: "Serra Negra",
+    neighborhood: "Bairro das Posses",
+    cep: "13930-000",
+    lat: -22.6180,
+    lng: -46.6980,
     environment: "mountain",
     type: "Sítio inteiro",
     superhost: true,
@@ -114,6 +122,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Praia Grande, Ubatuba - SP",
     state: "SP",
     city: "Ubatuba",
+    neighborhood: "Praia Grande",
+    cep: "11680-000",
+    lat: -23.4682,
+    lng: -45.0664,
     environment: "beach",
     type: "Casa inteira",
     superhost: true,
@@ -170,6 +182,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Planalto, Gramado - RS",
     state: "RS",
     city: "Gramado",
+    neighborhood: "Planalto",
+    cep: "95670-000",
+    lat: -29.3820,
+    lng: -50.8745,
     environment: "mountain",
     type: "Chalé inteiro",
     superhost: true,
@@ -224,6 +240,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Alto Capivari, Campos do Jordão - SP",
     state: "SP",
     city: "Campos do Jordão",
+    neighborhood: "Alto Capivari",
+    cep: "12460-000",
+    lat: -22.7150,
+    lng: -45.5780,
     environment: "mountain",
     type: "Casa de campo inteira",
     superhost: false,
@@ -269,6 +289,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Jurerê Internacional, Florianópolis - SC",
     state: "SC",
     city: "Florianópolis",
+    neighborhood: "Jurerê Internacional",
+    cep: "88053-300",
+    lat: -27.4428,
+    lng: -48.4983,
     environment: "beach",
     type: "Apartamento inteiro",
     superhost: true,
@@ -305,142 +329,7 @@ export const BENCHMARK_LISTINGS = [
     ]
   },
 
-  // 7. PRAIA & LITORAL - ILHABELA (SP)
-  {
-    id: "airbnb_ilhabela_refugio_mar",
-    url: "https://www.airbnb.com.br/rooms/50918234",
-    title: "Refúgio da Mata Ilhabela - Piscina Aquecida Privativa & Churrasqueira",
-    location: "Feiticeira, Ilhabela - SP",
-    state: "SP",
-    city: "Ilhabela",
-    environment: "beach",
-    type: "Casa inteira",
-    superhost: true,
-    rating: 4.88,
-    reviewCount: 41,
-    pricePerNight: 950,
-    cleaningFee: 190,
-    capacity: { guests: 7, bedrooms: 3, beds: 4, baths: 3 },
-    images: [
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80"
-    ],
-    officialAmenities: [
-      "Piscina privativa",
-      "Piscina aquecida",
-      "Churrasqueira",
-      "Wi-Fi",
-      "Ar-condicionado"
-    ],
-    hostDescription: `
-      Piscina privativa com aquecimento elétrico garantido e hidromassagem integrada em Ilhabela.
-      - Quiosque com churrasqueira gourmet e forno de pizza.
-      - Cozinha equipada. (Obs: Não possui Airfryer).
-      - Ar-condicionado nos 3 dormitórios e Wi-Fi de 200 Mbps.
-    `,
-    guestReviews: [
-      {
-        id: "rev_501",
-        author: "Bruno Silveira",
-        date: "Fevereiro de 2026",
-        rating: 5,
-        text: "A piscina com hidro aquecida é sensacional, tomamos banho à noite e a água estava quentinha!"
-      }
-    ]
-  },
-
-  // 8. PRAIA & LITORAL - BÚZIOS (RJ)
-  {
-    id: "airbnb_buzios_villa_geriba",
-    url: "https://www.airbnb.com.br/rooms/60192834",
-    title: "Villa Geribá Búzios - Vista Mar, Piscina Aquecida & Gourmet",
-    location: "Geribá, Armação dos Búzios - RJ",
-    state: "RJ",
-    city: "Búzios",
-    environment: "beach",
-    type: "Casa de praia inteira",
-    superhost: true,
-    rating: 4.95,
-    reviewCount: 52,
-    pricePerNight: 1100,
-    cleaningFee: 220,
-    capacity: { guests: 8, bedrooms: 4, beds: 5, baths: 4 },
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
-    ],
-    officialAmenities: [
-      "Piscina privativa",
-      "Piscina aquecida",
-      "Vista para o mar",
-      "Ar-condicionado",
-      "Churrasqueira",
-      "Wi-Fi"
-    ],
-    hostDescription: `
-      Casa espetacular a 3 minutos da Praia de Geribá em Búzios.
-      - Piscina privativa com aquecimento a gás e vista para o pôr do sol.
-      - Cozinha gourmet com Airfryer digital, cafeteira Nespresso, adega climatizada e taças de vinho.
-      - 4 suítes com ar-condicionado split inverter.
-      - Wi-Fi 500 Mbps de fibra e churrasqueira completa.
-    `,
-    guestReviews: [
-      {
-        id: "rev_601",
-        author: "Camila Ribeiro",
-        date: "Janeiro de 2026",
-        rating: 5,
-        text: "A piscina aquecida no fim de tarde com vista para o mar é uma experiência inesquecível! A cozinha tem airfryer e taças maravilhosas."
-      }
-    ]
-  },
-
-  // 9. CAMPO & SERRA - MONTE VERDE (MG)
-  {
-    id: "airbnb_monte_verde_cabana_pinheiros",
-    url: "https://www.airbnb.com.br/rooms/70482910",
-    title: "Cabana dos Pinheiros Monte Verde - Ofurô Aquecido & Lareira",
-    location: "Vila dos Pinheiros, Monte Verde - MG",
-    state: "MG",
-    city: "Monte Verde",
-    environment: "mountain",
-    type: "Cabana inteira",
-    superhost: true,
-    rating: 4.97,
-    reviewCount: 38,
-    pricePerNight: 890,
-    cleaningFee: 150,
-    capacity: { guests: 4, bedrooms: 1, beds: 2, baths: 1 },
-    images: [
-      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
-    ],
-    officialAmenities: [
-      "Banheira de hidromassagem",
-      "Lareira",
-      "Wi-Fi",
-      "Cozinha completa",
-      "Cortinas blackout"
-    ],
-    hostDescription: `
-      Charme alpino no alto da Serra da Mantiqueira em Monte Verde.
-      - Ofurô aquecido na varanda com vista para os pinheiros.
-      - Lareira aconchegante a lenha (lenha inclusa).
-      - Cozinha com Airfryer, cafeteira Nespresso e jogo de fondue completo.
-      - Wi-Fi de alta velocidade e silêncio absoluto.
-    `,
-    guestReviews: [
-      {
-        id: "rev_701",
-        author: "Rafael Nogueira",
-        date: "Fevereiro de 2026",
-        rating: 5,
-        text: "O ofurô aquecido na varanda é espetacular! Fizemos fondue e usamos a airfryer. Silencioso e perfeito para descansar."
-      }
-    ]
-  },
-
-  // 10. URBANO - SÃO PAULO (SP)
+  // 7. URBANO - SÃO PAULO (SP) - JARDINS / PINHEIROS
   {
     id: "airbnb_sp_design_pinheiros",
     url: "https://www.airbnb.com.br/rooms/80938472",
@@ -448,6 +337,10 @@ export const BENCHMARK_LISTINGS = [
     location: "Pinheiros, São Paulo - SP",
     state: "SP",
     city: "São Paulo",
+    neighborhood: "Pinheiros",
+    cep: "05414-001",
+    lat: -23.5615,
+    lng: -46.6859,
     environment: "urban",
     type: "Apartamento inteiro",
     superhost: true,
@@ -481,51 +374,6 @@ export const BENCHMARK_LISTINGS = [
         date: "Janeiro de 2026",
         rating: 5,
         text: "Localização perfeita, perto dos melhores restaurantes. O home office com internet rápida foi ideal para minha semana de trabalho e a piscina no terraço é aquecida e linda."
-      }
-    ]
-  },
-
-  // 11. URBANO & PRAIA - RIO DE JANEIRO (RJ)
-  {
-    id: "airbnb_rj_ipanema_ocean",
-    url: "https://www.airbnb.com.br/rooms/90384721",
-    title: "Ipanema Ocean View - Posto 9 com Ar em Tudo & Cozinha Gourmet",
-    location: "Ipanema, Rio de Janeiro - RJ",
-    state: "RJ",
-    city: "Rio de Janeiro",
-    environment: "beach",
-    type: "Apartamento inteiro",
-    superhost: true,
-    rating: 4.96,
-    reviewCount: 94,
-    pricePerNight: 820,
-    cleaningFee: 170,
-    capacity: { guests: 4, bedrooms: 2, beds: 2, baths: 2 },
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80"
-    ],
-    officialAmenities: [
-      "Acesso à praia",
-      "Vista para o mar",
-      "Ar-condicionado",
-      "Wi-Fi",
-      "Cozinha completa"
-    ],
-    hostDescription: `
-      Apartamento exclusivo a 1 quadra da praia de Ipanema.
-      - Cozinha com Airfryer, Cafeteira Nespresso, forno e taças de vinho.
-      - Ar-condicionado split em todas as suítes e sala.
-      - Redes de proteção em todas as janelas.
-      - Internet Fibra 400 Mbps e vista para o mar.
-    `,
-    guestReviews: [
-      {
-        id: "rev_901",
-        author: "Marcelo Dantas",
-        date: "Fevereiro de 2026",
-        rating: 5,
-        text: "Localização imbatível no Posto 9! Ar condicionado gelando forte em todos os cômodos e cozinha super prática com airfryer."
       }
     ]
   }
